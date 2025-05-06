@@ -27,7 +27,14 @@ pipeline {
                         bkimminich/juice-shop
                     sleep 5
                 '''
+                
                 sh '''
+                # Check if zap container exists
+                    if [ $(docker ps -a -q -f name=zap) ]; then
+                        echo "Stopping and removing existing zap container"
+                        docker stop zap || true
+                        docker rm zap || true
+                    fi
                     docker run --name zap \
                         --add-host=host.docker.internal:host-gateway \
                         -v /var/lib/docker/volumes/abcd-lab/_data/workspace/ABCD/:/zap/wrk/:rw \
