@@ -22,6 +22,11 @@ pipeline {
             steps {
                 sh 'mkdir -p results/'
                 sh '''
+                    # Check if juice-shop container is running
+                    if [ $(docker ps -q -f name=juice-shop) ]; then
+                        echo "Stopping existing juice-shop container"
+                        docker stop juice-shop || true
+                    fi
                     docker run --name juice-shop -d --rm \
                         -p 3000:3000 \
                         bkimminich/juice-shop
