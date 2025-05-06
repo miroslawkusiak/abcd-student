@@ -12,34 +12,35 @@ pipeline {
                 }
             }
         }
-        stage('Create reports directory and grant privileges') {
+        stage('Prepare test environment') {
             steps {
                 sh 'mkdir reports'
                 sh 'chmod 777 reports'
+                sh '''
+                    if [ $(docker ps -q -f name=juice-shop) ]; then
+                        echo "Stopping existing juice-shop container"
+                        docker stop juice-shop || true
+                    fi
+                    '''
+                sh '''
+                    if [ $(docker ps -a -q -f name=zap) ]; then
+                        echo "Stopping and removing existing zap container"
+                        docker stop zap || true
+                        docker rm zap || true
+                    fi
+                    '''
             }
         }
         stage('[ZAP] Baseline passive-scan') {
             steps {
                 sh 'mkdir -p results/'
                 sh '''
-                    # Check if juice-shop container is running
-                    if [ $(docker ps -q -f name=juice-shop) ]; then
-                        echo "Stopping existing juice-shop container"
-                        docker stop juice-shop || true
-                    fi
                     docker run --name juice-shop -d --rm \
                         -p 3000:3000 \
                         bkimminich/juice-shop
                     sleep 5
                 '''
-                
                 sh '''
-                # Check if zap container exists
-                    if [ $(docker ps -a -q -f name=zap) ]; then
-                        echo "Stopping and removing existing zap container"
-                        docker stop zap || true
-                        docker rm zap || true
-                    fi
                     docker run --name zap \
                         --add-host=host.docker.internal:host-gateway \
                         -v /var/lib/docker/volumes/abcd-lab/_data/workspace/ABCD/:/zap/wrk/:rw \
