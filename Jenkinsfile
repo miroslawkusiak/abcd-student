@@ -33,7 +33,7 @@ pipeline {
         }
         stage('[OSV] Scan package-lock.json file') {
             steps {
-                sh 'osv-scanner --format json --output results/osv_json_report.json --lockfile package-lock.json || true'
+                sh 'osv-scanner --format json --output reports/osv_json_report.json --lockfile package-lock.json || true'
             }
         }
         stage('[ZAP] Baseline passive-scan') {
@@ -62,7 +62,7 @@ pipeline {
                         docker stop zap juice-shop
                         docker rm zap
                     '''
-                    archiveArtifacts artifacts: 'results/**/*.*', fingerprint: true
+                    archiveArtifacts artifacts: 'reports/**/*.*', fingerprint: true
                 }
             }
         }
