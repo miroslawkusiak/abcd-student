@@ -35,6 +35,7 @@ pipeline {
             steps {
                 sh 'osv-scanner scan source --format json --output reports/osv_json_report.json --lockfile package-lock.json || true'
             }
+        }
         stage('[ZAP] Baseline passive-scan') {
             steps {
                 sh 'mkdir -p results/'
