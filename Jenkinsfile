@@ -60,6 +60,12 @@ pipeline {
             steps {
                 sh 'trufflehog git file://$PWD --branch main --json > reports/trufflehog_json_report.json'
             }
+
+        }
+        stage('Run Semgrep Scan'){
+            steps {
+                sh 'semgrep scan --config auto --matching-explanations --json-output=reports/semgrep_json_report.json'
+            }
             post {
                 always {
                     sh '''
