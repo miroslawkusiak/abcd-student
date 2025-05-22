@@ -62,10 +62,10 @@ pipeline {
             }
             post {
                 always {
-                    sh '''
-                        docker stop zap juice-shop
-                        docker rm zap
-                    '''
+                    // sh '''
+                    //     docker stop zap juice-shop
+                    //     docker rm zap
+                    // '''
                     archiveArtifacts artifacts: 'reports/**/*.*', fingerprint: true
                 }
             }
