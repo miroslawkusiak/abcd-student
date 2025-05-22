@@ -62,7 +62,7 @@ pipeline {
             }
 
         }
-        stage('Run Semgrep Scan'){
+        stage('[SEM] Semgrep Scan'){
             steps {
                 sh 'semgrep scan --config auto --matching-explanations --json-output=reports/semgrep_json_report.json'
             }
